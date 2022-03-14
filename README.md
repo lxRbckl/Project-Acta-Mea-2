@@ -6,5 +6,5 @@
 pip3 install discord
 
 cd
-git clone 
+git clone https://github.com/lxRbckl/Project-Acta-Mea-2.git
 ```
