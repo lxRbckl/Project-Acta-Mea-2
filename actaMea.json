@@ -14,7 +14,5 @@
       "SHOW"
    ],
    "server": {},
-   "ssh": {
-      "test": "ok ok"
-   }
+   "ssh": {}
 }
