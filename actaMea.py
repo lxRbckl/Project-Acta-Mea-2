@@ -56,7 +56,7 @@ async def setFunction(ctx, data: dict, key: str, args) -> dict:
 
         # set node <
         # delete message <
-        data[key][args[0]] = args[1]
+        data[key][args[0]] = ' '.join(args[1:])
         await ctx.message.delete()
 
     # >
