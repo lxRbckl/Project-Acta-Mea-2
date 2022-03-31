@@ -48,99 +48,116 @@ def jsonDump(file: str, data: dict):
     # >
 
 
-async def setFunction(ctx, data: dict, key: str, args) -> dict:
+@commands.has_permissions(administrator = True)
+@actaMea.command(aliases = jsonLoad(file = '/setting.json')['alias']['set'])
+async def setCommand(ctx, parKey: str, *args) -> None:
     '''  '''
 
-    # if ((key in data) and (value not in data)) <
-    if ((key in data.keys()) and (args[0] not in data[key].keys())):
+    # get data <
+    data = jsonLoad(file = '/data.json')
+
+    # >
+
+    # if ((existing key) and (nonexisting value)) then set <
+    if ((parKey in data.keys()) and (args[0] not in data[parKey].keys())):
 
         # set node <
+        # update data <
         # delete message <
-        data[key][args[0]] = ' '.join(args[1:])
-        await ctx.message.delete()
-
-    # >
-
-    # output <
-    return data
-
-    # >
-
-
-async def getFunction(ctx, data: dict, key: str, value: str) -> None:
-    '''  '''
-
-    # if (key and value in data) <
-    if ((key in data.keys()) and (value in data[key].keys())):
-
-        # get node <
-        # delete message <
-        await ctx.send(data[key][value], delete_after = 60)
+        data[parKey][args[0]] = ' '.join(args[1:])
+        jsonDump(file = '/data.json', data = data)
         await ctx.message.delete()
 
         # >
 
     # >
 
-
-async def delFunction(ctx, data: dict, key: str, value: str) -> dict:
-    '''  '''
-
-    # if (key and value in data) <
-    if ((key in data.keys()) and (value in data[key].keys())):
-
-        # del node <
-        # delete message <
-        del data[key][value]
-        await ctx.message.delete()
-
-        # >
-
-    # >
-
-    # output <
-    return data
-
-    # >
-
-
-async def showFunction(ctx, data: dict, key: str):
-    '''  '''
-
-    # if (key in data) <
-    if (key in data.keys()):
-
-        # send array <
-        # delete message <
-        await ctx.send('\n'.join(k for k in data[key].keys()), delete_after = 60)
-        await ctx.message.delete()
-
-        # >
+    # else then nonexisting key or existing value <
+    else: await ctx.send('Node already exists.', delete_after = 180)
 
     # >
 
 
 @commands.has_permissions(administrator = True)
-@actaMea.command(aliases = jsonLoad(file = '/actaMea.json')['aliases'])
-async def commandFunction(ctx, key, *args):
+@actaMea.command(aliases = jsonLoad(file = '/setting.json')['alias']['get'])
+async def getCommand(ctx, parKey: str, parValue: str) -> None:
     '''  '''
 
-    # load <
-    data = jsonLoad(file = '/actaMea.json')
+    # get data <
+    data = jsonLoad(file = '/data.json')
 
     # >
 
-    # if (show) <
-    # elif (get, set or del) <
-    if (ctx.invoked_with.lower() == 'show'): await showFunction(ctx, data, key)
-    elif (ctx.invoked_with.lower() == 'get'): await getFunction(ctx, data, key, args[0])
-    elif (ctx.invoked_with.lower() == 'set'): data = await setFunction(ctx, data, key, args)
-    elif (ctx.invoked_with.lower() == 'del'): data = await delFunction(ctx, data, key, args[0])
+    # if ((existing key) and (nonexisting value)) then get <
+    if ((parKey in data.keys()) and (parValue in data[parKey].keys())):
+
+        # get node <
+        # delete message <
+        await ctx.send(data[parKey][parValue], delete_after = 180)
+        await ctx.message.delete()
+
+        # >
 
     # >
 
-    # dump <
-    jsonDump(file = '/actaMea.json', data = data)
+    # else then nonexisting key or nonexisting value <
+    else: await ctx.send('Node does not exist.', delete_after = 180)
+
+    # >
+
+
+@actaMea.command(aliases = jsonLoad(file = '/setting.json')['alias']['del'])
+async def delCommand(ctx, parKey: str, parValue: str) -> None:
+    '''  '''
+
+    # get data <
+    data = jsonLoad(file = '/data.json')
+
+    # >
+
+    # if ((existing key) and (nonexisting value)) then get <
+    if ((parKey in data.keys()) and (parValue in data[parKey].keys())):
+
+        # delete node <
+        # update data <
+        # delete message <
+        del data[parKey][parValue]
+        jsonDump(file = '/data.json', data = data)
+        await ctx.message.delete()
+
+        # >
+
+    # >
+
+    # else then nonexisting key or nonexisting value <
+    else: await ctx.send('Node does not exist.', delete_after = 180)
+
+    # >
+
+
+@actaMea.command(aliases = jsonLoad(file = '/setting.json')['alias']['show'])
+async def showCommand(ctx, parKey: str) -> None:
+    '''  '''
+
+    # get data <
+    data = jsonLoad(file = '/data.json')
+
+    # >
+
+    # if (existing key) then send <
+    if (parKey in data.keys()):
+
+        # send to user <
+        # delete message <
+        await ctx.send('\n'.join(k for k in data[parKey].keys()), delete_after = 60)
+        await ctx.message.delete()
+
+        # >
+
+    # >
+
+    # else then notify <
+    else: await ctx.send('Data does not exist.', delete_after = 180)
 
     # >
 
