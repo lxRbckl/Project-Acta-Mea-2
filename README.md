@@ -3,8 +3,8 @@
 
 ### Installation
 ```
-pip3 install discord
-
 cd
 git clone https://github.com/lxRbckl/Project-Acta-Mea-2.git
+
+pip3 install -r requirements.txt
 ```
