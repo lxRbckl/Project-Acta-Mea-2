@@ -13,13 +13,8 @@ from discord.ext import commands
 # global <
 path = path.realpath(__file__).split('/')
 directory = '/'.join(path[:(len(path) - 1)])
+actaMea = commands.Bot(command_prefix = '', intents = Intents.all())
 token = ''
-actaMea = commands.Bot(
-
-    command_prefix = '',
-    intents = Intents.all()
-
-)
 
 # >
 
